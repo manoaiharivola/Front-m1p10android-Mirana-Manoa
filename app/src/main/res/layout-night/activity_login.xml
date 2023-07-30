@@ -73,6 +73,7 @@
                             android:id="@+id/textView2"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/saira"
                             android:text="E-mail" />
                     </LinearLayout>
 
@@ -90,6 +91,7 @@
                             android:layout_height="35dp"
                             android:background="@color/white"
                             android:ems="10"
+                            android:fontFamily="@font/saira"
                             android:inputType="textEmailAddress" />
                     </LinearLayout>
                 </LinearLayout>
@@ -139,6 +141,7 @@
                             android:id="@+id/textView3"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/saira"
                             android:text="Mot de passe" />
                     </LinearLayout>
 
@@ -156,6 +159,7 @@
                             android:layout_height="35dp"
                             android:background="@color/white"
                             android:ems="10"
+                            android:fontFamily="@font/saira"
                             android:inputType="textPassword" />
                     </LinearLayout>
                 </LinearLayout>
@@ -197,6 +201,7 @@
                         android:id="@+id/button4"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/saira_medium"
                         android:text="Se connecter" />
                 </LinearLayout>
 
@@ -253,6 +258,7 @@
                         android:id="@+id/button3"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/saira_medium"
                         android:text="Créer un compte"
                         app:backgroundTint="@color/orange" />
                 </LinearLayout>
