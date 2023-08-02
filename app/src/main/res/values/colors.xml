@@ -16,4 +16,5 @@
     <color name="orange">#f19d67</color>
     <color name="background_night">#002c58</color>
     <color name="background">#fff5e3</color>
+    <color name="night_input">#1b1b1b</color>
 </resources>
