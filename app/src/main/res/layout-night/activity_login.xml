@@ -14,14 +14,14 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="275dp"
+            android:layout_height="250dp"
             android:layout_gravity="center_horizontal|center_vertical"
             android:gravity="center_horizontal|center_vertical"
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="160dp"
-                android:layout_height="160dp"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
                 android:src="@drawable/icon_dark"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -89,7 +89,7 @@
                             android:id="@+id/editTextTextEmailAddress2"
                             android:layout_width="match_parent"
                             android:layout_height="35dp"
-                            android:background="@color/white"
+                            android:background="@color/black"
                             android:ems="10"
                             android:fontFamily="@font/saira"
                             android:inputType="textEmailAddress"
@@ -158,7 +158,7 @@
                             android:id="@+id/editTextTextPassword3"
                             android:layout_width="match_parent"
                             android:layout_height="35dp"
-                            android:background="@color/white"
+                            android:background="@color/black"
                             android:ems="10"
                             android:fontFamily="@font/saira"
                             android:inputType="textPassword"
