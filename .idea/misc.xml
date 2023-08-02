@@ -4,9 +4,11 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/AndroidStudioProjects/M1/Front-m1p10android-Mirana-Manoa/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
-        <entry key="..\:/AndroidStudioProjects/M1/Front-m1p10android-Mirana-Manoa/app/src/main/res/layout-night/activity_login.xml" value="0.2" />
-        <entry key="..\:/AndroidStudioProjects/M1/Front-m1p10android-Mirana-Manoa/app/src/main/res/layout-night/activity_main.xml" value="0.1" />
-        <entry key="..\:/AndroidStudioProjects/M1/Front-m1p10android-Mirana-Manoa/app/src/main/res/layout/activity_login.xml" value="0.264" />
+        <entry key="..\:/AndroidStudioProjects/M1/Front-m1p10android-Mirana-Manoa/app/src/main/res/layout-night/activity_inscription.xml" value="0.264" />
+        <entry key="..\:/AndroidStudioProjects/M1/Front-m1p10android-Mirana-Manoa/app/src/main/res/layout-night/activity_login.xml" value="0.264" />
+        <entry key="..\:/AndroidStudioProjects/M1/Front-m1p10android-Mirana-Manoa/app/src/main/res/layout-night/activity_main.xml" value="0.152" />
+        <entry key="..\:/AndroidStudioProjects/M1/Front-m1p10android-Mirana-Manoa/app/src/main/res/layout/activity_inscription.xml" value="0.264" />
+        <entry key="..\:/AndroidStudioProjects/M1/Front-m1p10android-Mirana-Manoa/app/src/main/res/layout/activity_login.xml" value="0.2" />
         <entry key="..\:/AndroidStudioProjects/M1/Front-m1p10android-Mirana-Manoa/app/src/main/res/layout/activity_main.xml" value="0.176" />
         <entry key="..\:/AndroidStudioProjects/M1/Front-m1p10android-Mirana-Manoa/app/src/main/res/layout/activity_main2.xml" value="0.16077898550724637" />
         <entry key="..\:/AndroidStudioProjects/M1/Front-m1p10android-Mirana-Manoa/app/src/main/res/layout/activity_test.xml" value="0.16077898550724637" />
