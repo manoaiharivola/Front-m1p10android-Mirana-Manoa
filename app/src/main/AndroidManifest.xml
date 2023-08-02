@@ -12,11 +12,11 @@
         <activity
             android:name=".vue.Login"
             android:exported="true"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
+            android:theme="@style/Theme.Dagostagram.NoActionBar" />
         <activity
             android:name=".vue.MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
+            android:theme="@style/Theme.Dagostagram.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
