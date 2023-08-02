@@ -11,7 +11,8 @@
         android:theme="@style/Theme.Dagostagram">
         <activity
             android:name=".vue.Inscription"
-            android:exported="true" />
+            android:exported="true"
+            android:parentActivityName=".vue.Login"/>
         <activity
             android:name=".vue.Login"
             android:exported="true"
