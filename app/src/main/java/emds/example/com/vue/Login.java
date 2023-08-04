@@ -13,7 +13,10 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.gson.internal.LinkedTreeMap;
+
 import java.util.HashMap;
+import java.util.List;
 
 import emds.example.com.R;
 import emds.example.com.interfaces.RetrofitInterface;
@@ -74,12 +77,18 @@ public class Login extends AppCompatActivity {
                         public void onResponse(Call<LoginResult> call, Response<LoginResult> response) {
                             LoginResult result = response.body();
                             if (result.getStatus() == 200) {
-                            /*AlertDialog.Builder builder1 = new AlertDialog.Builder(Login.this);
-                            builder1.setTitle("Access Token");
-                            builder1.setMessage(result.getAccessToken());
-
-                            builder1.show();*/
-                                System.out.println(result.getData());
+                                Object data = result.getData();
+                                if (data instanceof List) {
+                                    List<LinkedTreeMap<String, String>> dataList = (List<LinkedTreeMap<String, String>>) data;
+                                    if (!dataList.isEmpty()) {
+                                        LinkedTreeMap<String, String> dataMap = dataList.get(0);
+                                        String accessToken = dataMap.get("access_token");
+                                        if (accessToken != null) {
+                                            // Afficher l'access token dans la console ou dans une boîte de dialogue
+                                            System.out.println("Access Token: " + accessToken);
+                                        }
+                                    }
+                                }
                             } else if (result.getStatus() == 401) {
                                 Toast.makeText(Login.this, "E-mail ou mot de passe incorrect !", Toast.LENGTH_LONG).show();
                             }
