@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Dagostagram</string>
+    <string name="base_url">https://zany-red-crow-hat.cyclic.cloud</string>
 </resources>
