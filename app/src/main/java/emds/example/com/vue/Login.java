@@ -2,9 +2,11 @@ package emds.example.com.vue;
 
 import android.content.Context;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -41,6 +43,8 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_login);
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(Login.this);
 
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
@@ -84,8 +88,9 @@ public class Login extends AppCompatActivity {
                                         LinkedTreeMap<String, String> dataMap = dataList.get(0);
                                         String accessToken = dataMap.get("access_token");
                                         if (accessToken != null) {
-                                            // Afficher l'access token dans la console ou dans une boîte de dialogue
-                                            System.out.println("Access Token: " + accessToken);
+                                            SharedPreferences.Editor editor = preferences.edit();
+                                            editor.putString("access_token", accessToken);
+                                            editor.apply();
                                         }
                                     }
                                 }
