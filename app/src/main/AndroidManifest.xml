@@ -15,7 +15,7 @@
         <activity
             android:name=".vue.NavMenu"
             android:exported="true"
-            android:theme="@style/Theme.Dagostagram.NoActionBar"/>
+            android:theme="@style/Theme.Dagostagram.NoActionBar" />
         <activity
             android:name=".vue.Inscription"
             android:exported="true"

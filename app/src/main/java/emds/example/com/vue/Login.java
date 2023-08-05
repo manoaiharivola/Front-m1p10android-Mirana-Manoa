@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.WindowManager;
@@ -32,6 +33,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Login extends AppCompatActivity {
+
+    private LoadingAirplane loadingAirplane;
 
     private boolean isConnected = true;
     private NetworkChangeReceiver networkChangeReceiver = new NetworkChangeReceiver(isConnected);
@@ -66,6 +69,8 @@ public class Login extends AppCompatActivity {
         final EditText emailEdit = findViewById(R.id.editTextTextEmailAddress2);
         final EditText mdpEdit = findViewById(R.id.editTextTextPassword3);
 
+        loadingAirplane = new LoadingAirplane(this);
+
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -81,29 +86,43 @@ public class Login extends AppCompatActivity {
                         map.put("mail", mail);
                         map.put("mdp", mdp);
 
+                        loadingAirplane.show();
                         Call<APIResult> call = retrofitInterface.executeLogin(map);
                         call.enqueue(new Callback<APIResult>() {
                             @Override
                             public void onResponse(Call<APIResult> call, Response<APIResult> response) {
                                 APIResult result = response.body();
-                                if (result.getStatus() == 200) {
-                                    Object data = result.getData();
-                                    if (data instanceof List) {
-                                        List<LinkedTreeMap<String, String>> dataList = (List<LinkedTreeMap<String, String>>) data;
-                                        if (!dataList.isEmpty()) {
-                                            LinkedTreeMap<String, String> dataMap = dataList.get(0);
-                                            String accessToken = dataMap.get("access_token");
-                                            if (accessToken != null) {
-                                                SharedPreferences.Editor editor = preferences.edit();
-                                                editor.putString("access_token", accessToken);
-                                                editor.apply();
+                                Handler handler = new Handler();
+                                Runnable runnable = new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        loadingAirplane.cancel();
+                                        if (result.getStatus() == 200) {
+                                            Object data = result.getData();
+                                            if (data instanceof List) {
+                                                List<LinkedTreeMap<String, String>> dataList = (List<LinkedTreeMap<String, String>>) data;
+                                                if (!dataList.isEmpty()) {
+                                                    LinkedTreeMap<String, String> dataMap = dataList.get(0);
+                                                    String accessToken = dataMap.get("access_token");
+                                                    if (accessToken != null) {
+                                                        SharedPreferences.Editor editor = preferences.edit();
+                                                        editor.putString("access_token", accessToken);
+                                                        editor.apply();
+                                                    }
+                                                    startActivity(new Intent(Login.this, NavMenu.class));
+                                                }
                                             }
+                                        } else if (result.getStatus() == 401) {
+                                            Toast.makeText(Login.this, "E-mail ou mot de passe incorrect !", Toast.LENGTH_LONG).show();
+                                        } else {
+                                            Toast.makeText(Login.this, "Erreur !", Toast.LENGTH_LONG).show();
                                         }
                                     }
-                                } else if (result.getStatus() == 401) {
-                                    Toast.makeText(Login.this, "E-mail ou mot de passe incorrect !", Toast.LENGTH_LONG).show();
+                                };
+                                if (result.getStatus() == 200) {
+                                    handler.postDelayed(runnable, 5000);
                                 } else {
-                                    Toast.makeText(Login.this, "Erreur !", Toast.LENGTH_LONG).show();
+                                    handler.postDelayed(runnable, 3000);
                                 }
                             }
 
