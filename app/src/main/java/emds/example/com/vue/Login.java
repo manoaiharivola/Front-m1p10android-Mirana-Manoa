@@ -23,7 +23,7 @@ import java.util.List;
 
 import emds.example.com.R;
 import emds.example.com.interfaces.RetrofitInterface;
-import emds.example.com.modele.LoginResult;
+import emds.example.com.modele.APIResult;
 import emds.example.com.receiver.NetworkChangeReceiver;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -73,39 +73,55 @@ public class Login extends AppCompatActivity {
                 NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
 
                 if (activeNetwork != null && activeNetwork.isConnected()) {
-                    HashMap<String, String> map = new HashMap<>();
-                    map.put("mail", emailEdit.getText().toString());
-                    map.put("mdp", mdpEdit.getText().toString());
+                    String mail = emailEdit.getText().toString().trim();
+                    String mdp = mdpEdit.getText().toString().trim();
 
-                    Call<LoginResult> call = retrofitInterface.executeLogin(map);
-                    call.enqueue(new Callback<LoginResult>() {
-                        @Override
-                        public void onResponse(Call<LoginResult> call, Response<LoginResult> response) {
-                            LoginResult result = response.body();
-                            if (result.getStatus() == 200) {
-                                Object data = result.getData();
-                                if (data instanceof List) {
-                                    List<LinkedTreeMap<String, String>> dataList = (List<LinkedTreeMap<String, String>>) data;
-                                    if (!dataList.isEmpty()) {
-                                        LinkedTreeMap<String, String> dataMap = dataList.get(0);
-                                        String accessToken = dataMap.get("access_token");
-                                        if (accessToken != null) {
-                                            SharedPreferences.Editor editor = preferences.edit();
-                                            editor.putString("access_token", accessToken);
-                                            editor.apply();
+                    if(!mail.isEmpty()&&!mdp.isEmpty()) {
+                        HashMap<String, String> map = new HashMap<>();
+                        map.put("mail", mail);
+                        map.put("mdp", mdp);
+
+                        Call<APIResult> call = retrofitInterface.executeLogin(map);
+                        call.enqueue(new Callback<APIResult>() {
+                            @Override
+                            public void onResponse(Call<APIResult> call, Response<APIResult> response) {
+                                APIResult result = response.body();
+                                if (result.getStatus() == 200) {
+                                    Object data = result.getData();
+                                    if (data instanceof List) {
+                                        List<LinkedTreeMap<String, String>> dataList = (List<LinkedTreeMap<String, String>>) data;
+                                        if (!dataList.isEmpty()) {
+                                            LinkedTreeMap<String, String> dataMap = dataList.get(0);
+                                            String accessToken = dataMap.get("access_token");
+                                            if (accessToken != null) {
+                                                SharedPreferences.Editor editor = preferences.edit();
+                                                editor.putString("access_token", accessToken);
+                                                editor.apply();
+                                            }
                                         }
                                     }
+                                } else if (result.getStatus() == 401) {
+                                    Toast.makeText(Login.this, "E-mail ou mot de passe incorrect !", Toast.LENGTH_LONG).show();
+                                } else {
+                                    Toast.makeText(Login.this, "Erreur !", Toast.LENGTH_LONG).show();
                                 }
-                            } else if (result.getStatus() == 401) {
-                                Toast.makeText(Login.this, "E-mail ou mot de passe incorrect !", Toast.LENGTH_LONG).show();
                             }
-                        }
 
-                        @Override
-                        public void onFailure(Call<LoginResult> call, Throwable t) {
-                            Toast.makeText(Login.this, t.getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    });
+                            @Override
+                            public void onFailure(Call<APIResult> call, Throwable t) {
+                                Toast.makeText(Login.this, t.getMessage(), Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
+
+                    if (mail.isEmpty()) {
+                        emailEdit.setError("Ce champ est obligatoire !");
+                    }
+
+                    if (mdp.isEmpty()) {
+                        mdpEdit.setError("Ce champ est obligatoire !");
+                    }
+
                 } else {
                     Toast.makeText(Login.this, "Pas de connexion Internet", Toast.LENGTH_SHORT).show();
                 }

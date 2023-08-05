@@ -1,6 +1,6 @@
 package emds.example.com.modele;
 
-public class LoginResult {
+public class APIResult {
     private int status;
 
     private Object data;

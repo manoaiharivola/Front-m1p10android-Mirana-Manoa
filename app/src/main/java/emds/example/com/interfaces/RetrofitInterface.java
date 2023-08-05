@@ -2,7 +2,7 @@ package emds.example.com.interfaces;
 
 import java.util.HashMap;
 
-import emds.example.com.modele.LoginResult;
+import emds.example.com.modele.APIResult;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
@@ -10,5 +10,8 @@ import retrofit2.http.POST;
 public interface RetrofitInterface {
 
     @POST("/authentification/login")
-    Call<LoginResult> executeLogin(@Body HashMap<String, String> map);
+    Call<APIResult> executeLogin(@Body HashMap<String, String> map);
+
+    @POST("/authentification/register")
+    Call<APIResult> executeInscription(@Body HashMap<String, String> map);
 }
