@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -36,6 +37,7 @@ public class Inscription extends AppCompatActivity {
     EditText mailEdit;
     EditText mdpEdit;
 
+    private LoadingCompass loadingCompass;
     private Retrofit retrofit;
     private RetrofitInterface retrofitInterface;
 
@@ -65,6 +67,7 @@ public class Inscription extends AppCompatActivity {
         mailEdit = findViewById(R.id.editTextTextEmailAddress3);
         mdpEdit = findViewById(R.id.editTextTextPassword);
 
+        loadingCompass = new LoadingCompass(this);
         /*btnSInscrire.setOnClickListener((v) -> {
             startActivity(new Intent(Inscription.this, Login.class));
         });*/
@@ -96,18 +99,32 @@ public class Inscription extends AppCompatActivity {
                         map.put("mail", mail);
                         map.put("mdp", mdp);
 
+
+                        loadingCompass.show();
                         Call<APIResult> call = retrofitInterface.executeInscription(map);
                         call.enqueue(new Callback<APIResult>() {
                             @Override
                             public void onResponse(Call<APIResult> call, Response<APIResult> response) {
                                 APIResult result = response.body();
+                                Handler handler = new Handler();
+                                Runnable runnable = new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        loadingCompass.cancel();
+                                        if (result.getStatus() == 201) {
+                                            startActivity(new Intent(Inscription.this, Login.class));
+                                            Toast.makeText(Inscription.this, "Votre compte a été créé ! Vous pouvez maintenant vous connecter avec votre compte.", Toast.LENGTH_LONG).show();
+                                        } else if (result.getStatus() == 401) {
+                                            Toast.makeText(Inscription.this, "Ce compte existe déjà !", Toast.LENGTH_LONG).show();
+                                        } else {
+                                            Toast.makeText(Inscription.this, "Erreur !", Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+                                };
                                 if (result.getStatus() == 201) {
-                                    startActivity(new Intent(Inscription.this, Login.class));
-                                    Toast.makeText(Inscription.this, "Votre compte a été créé ! Vous pouvez maintenant vous connecter avec votre compte.", Toast.LENGTH_LONG).show();
-                                } else if (result.getStatus() == 401) {
-                                    Toast.makeText(Inscription.this, "Ce compte existe déjà !", Toast.LENGTH_LONG).show();
+                                    handler.postDelayed(runnable, 8000);
                                 } else {
-                                    Toast.makeText(Inscription.this, "Erreur !", Toast.LENGTH_LONG).show();
+                                    handler.postDelayed(runnable, 3000);
                                 }
                             }
 
