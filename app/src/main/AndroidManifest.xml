@@ -13,9 +13,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Dagostagram">
         <activity
+            android:name=".vue.NavMenu"
+            android:exported="true"
+            android:theme="@style/Theme.Dagostagram.NoActionBar"/>
+        <activity
             android:name=".vue.Inscription"
             android:exported="true"
-            android:parentActivityName=".vue.Login"/>
+            android:parentActivityName=".vue.Login" />
         <activity
             android:name=".vue.Login"
             android:exported="true"
@@ -23,7 +27,7 @@
         <activity
             android:name=".vue.MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.Dagostagram.NoActionBar" >
+            android:theme="@style/Theme.Dagostagram.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
