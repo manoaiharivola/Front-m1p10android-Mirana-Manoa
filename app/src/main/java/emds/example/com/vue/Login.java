@@ -121,11 +121,7 @@ public class Login extends AppCompatActivity {
                                         }
                                     }
                                 };
-                                if (result.getStatus() == 200) {
-                                    handler.postDelayed(runnable, 5000);
-                                } else {
-                                    handler.postDelayed(runnable, 3000);
-                                }
+                                handler.postDelayed(runnable, 3000);
                             }
 
                             @Override

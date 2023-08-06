@@ -1,5 +1,6 @@
 package emds.example.com.vue;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -41,6 +42,7 @@ public class HomeFragment extends Fragment {
 
     private List<Publication> publicationList;
     private CustomListePublicationAdapter adapter;
+    ProgressDialog dialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -63,6 +65,11 @@ public class HomeFragment extends Fragment {
         ConnectivityManager connectivityManager = (ConnectivityManager) requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
 
+        if (activeNetwork != null && activeNetwork.isConnected()) {
+            dialog = new ProgressDialog(getContext());
+            dialog.setTitle("Chargement en cours ...");
+            dialog.show();
+
             if (accessToken != "") {
                 Call<PublicationApiResponse> call = retrofitInterface.getPublications("Bearer " + accessToken);
                 call.enqueue(new Callback<PublicationApiResponse>() {
@@ -75,6 +82,7 @@ public class HomeFragment extends Fragment {
                             publicationList.clear();
                             publicationList.addAll(publications);
                             adapter.notifyDataSetChanged();
+                            dialog.dismiss();
                         } else if (result.getStatus() == 401) {
                             loadingBagage.show();
                             Handler handler = new Handler();
@@ -90,7 +98,7 @@ public class HomeFragment extends Fragment {
                                 }
                             };
                             handler.postDelayed(runnable, 3000);
-                        }  else {
+                        } else {
                             Toast.makeText(getContext(), "Erreur !", Toast.LENGTH_LONG).show();
                         }
                     }
@@ -105,12 +113,12 @@ public class HomeFragment extends Fragment {
                 Toast.makeText(getContext(), "Authentification requise", Toast.LENGTH_LONG).show();
             }
 
-        publicationList = new ArrayList<>();
-        RecyclerView recyclerView = view.findViewById(R.id.recycler_main);
-        adapter = new CustomListePublicationAdapter(getContext(), publicationList);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
+            publicationList = new ArrayList<>();
+            RecyclerView recyclerView = view.findViewById(R.id.recycler_main);
+            adapter = new CustomListePublicationAdapter(getContext(), publicationList);
+            recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        }
         return view;
     }
 }
