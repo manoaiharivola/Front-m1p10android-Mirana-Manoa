@@ -9,7 +9,7 @@ public class Publication {
     private String publication_description;
     private String publication_image;
     private String date_publication;
-    private LieuDetails lieuDetails;
+    private Lieu lieuDetails;
     private CategorieDetails categorieDetails;
     private UserDetails userDetails;
     private int reactionsCount;
@@ -78,11 +78,11 @@ public class Publication {
         this.date_publication = date_publication;
     }
 
-    public LieuDetails getLieuDetails() {
+    public Lieu getLieuDetails() {
         return lieuDetails;
     }
 
-    public void setLieuDetails(LieuDetails lieuDetails) {
+    public void setLieuDetails(Lieu lieuDetails) {
         this.lieuDetails = lieuDetails;
     }
 
