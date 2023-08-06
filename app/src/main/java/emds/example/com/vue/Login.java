@@ -49,6 +49,7 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(Login.this);
+        String accessToken = preferences.getString("access_token", "");
 
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
@@ -128,7 +129,7 @@ public class Login extends AppCompatActivity {
 
                             @Override
                             public void onFailure(Call<APIResult> call, Throwable t) {
-                                Toast.makeText(Login.this, t.getMessage(), Toast.LENGTH_LONG).show();
+                                Toast.makeText(Login.this, "Erreur serveur !", Toast.LENGTH_LONG).show();
                             }
                         });
                     }

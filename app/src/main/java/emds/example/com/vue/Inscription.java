@@ -130,7 +130,7 @@ public class Inscription extends AppCompatActivity {
 
                             @Override
                             public void onFailure(Call<APIResult> call, Throwable t) {
-                                Toast.makeText(Inscription.this, t.getMessage(), Toast.LENGTH_LONG).show();
+                                Toast.makeText(Inscription.this, "Erreur serveur !", Toast.LENGTH_LONG).show();
                             }
                         });
                     } else {
