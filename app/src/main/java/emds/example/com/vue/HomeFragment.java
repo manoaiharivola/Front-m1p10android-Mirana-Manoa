@@ -51,7 +51,7 @@ public class HomeFragment extends Fragment {
         NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
 
             if (accessToken != "") {
-                Call<APIResult> call = retrofitInterface.getPublications("Bearer a" + accessToken);
+                Call<APIResult> call = retrofitInterface.getPublications("Bearer " + accessToken);
                 call.enqueue(new Callback<APIResult>() {
                     @Override
                     public void onResponse(Call<APIResult> call, Response<APIResult> response) {
