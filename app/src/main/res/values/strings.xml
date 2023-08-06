@@ -3,4 +3,6 @@
     <string name="base_url">https://zany-red-crow-hat.cyclic.cloud</string>
     <string name="open_nav">Ouvrir</string>
     <string name="close_nav">Fermer</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
