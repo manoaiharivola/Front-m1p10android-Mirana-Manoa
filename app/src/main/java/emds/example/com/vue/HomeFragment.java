@@ -101,10 +101,11 @@ public class HomeFragment extends Fragment {
                                     editor.remove("access_token");
                                     editor.apply();
                                     startActivity(new Intent(getContext(), Login.class));
+                                    requireActivity().finish();
                                     Toast.makeText(getContext(), "Session expirée! Authentification requise", Toast.LENGTH_LONG).show();
                                 }
                             };
-                            handler.postDelayed(runnable, 3000);
+                            handler.postDelayed(runnable, 2000);
                         } else {
                             Toast.makeText(getContext(), "Erreur !", Toast.LENGTH_LONG).show();
                         }
@@ -117,6 +118,7 @@ public class HomeFragment extends Fragment {
                 });
             } else {
                 startActivity(new Intent(getContext(), Login.class));
+                requireActivity().finish();
                 Toast.makeText(getContext(), "Authentification requise", Toast.LENGTH_LONG).show();
             }
 
@@ -161,10 +163,11 @@ public class HomeFragment extends Fragment {
                                             editor.remove("access_token");
                                             editor.apply();
                                             startActivity(new Intent(getContext(), Login.class));
+                                            requireActivity().finish();
                                             Toast.makeText(getContext(), "Session expirée! Authentification requise", Toast.LENGTH_LONG).show();
                                         }
                                     };
-                                    handler.postDelayed(runnable, 3000);
+                                    handler.postDelayed(runnable, 2000);
                                 } else {
                                     Toast.makeText(getContext(), "Erreur !", Toast.LENGTH_LONG).show();
                                 }
@@ -177,6 +180,7 @@ public class HomeFragment extends Fragment {
                         });
                     } else {
                         startActivity(new Intent(getContext(), Login.class));
+                        requireActivity().finish();
                         Toast.makeText(getContext(), "Authentification requise", Toast.LENGTH_LONG).show();
                     }
 
