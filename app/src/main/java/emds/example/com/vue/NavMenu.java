@@ -63,7 +63,10 @@ public class NavMenu extends AppCompatActivity implements NavigationView.OnNavig
         toggle.syncState();
 
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, new HomeFragment())
+                    .addToBackStack(null)
+                    .commit();
             navigationView.setCheckedItem(R.id.nav_home);
         }
 
@@ -74,7 +77,7 @@ public class NavMenu extends AppCompatActivity implements NavigationView.OnNavig
             @Override
             public void onClick(View view) {
                 fragmentManager.beginTransaction()
-                        .replace(R.id.fragment_container, new SettingsFragment())
+                        .replace(R.id.fragment_container, new ChercherLieuFragment())
                         .addToBackStack(null)
                         .commit();
             }
