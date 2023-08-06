@@ -13,6 +13,7 @@ import java.util.List;
 
 import emds.example.com.R;
 import emds.example.com.modele.Publication;
+import emds.example.com.util.DateFormat;
 
 public class CustomListePublicationAdapter extends RecyclerView.Adapter<CustomListePublicationViewHolder> {
     private Context context;
@@ -33,7 +34,7 @@ public class CustomListePublicationAdapter extends RecyclerView.Adapter<CustomLi
     public void onBindViewHolder(@NonNull CustomListePublicationViewHolder holder, int position) {
         holder.publication_lieu.setText(publications.get(position).getLieuDetails().getLieu_nom());
         holder.publication_utilisateur.setText(publications.get(position).getUserDetails().getUtilisateur_pseudo());
-        holder.publication_date.setText(publications.get(position).getDate_publication());
+        holder.publication_date.setText(DateFormat.formatVueDate(publications.get(position).getDate_publication()));
         holder.publication_description.setText(publications.get(position).getPublication_description());
 
         if(publications.get(position).getPublication_image()!=null) {
