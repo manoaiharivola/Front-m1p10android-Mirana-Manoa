@@ -111,6 +111,7 @@ public class Login extends AppCompatActivity {
                                                         editor.apply();
                                                     }
                                                     startActivity(new Intent(Login.this, NavMenu.class));
+                                                    finish();
                                                 }
                                             }
                                         } else if (result.getStatus() == 401) {
