@@ -14,10 +14,18 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import emds.example.com.R;
+import emds.example.com.custom.CustomListePublicationAdapter;
 import emds.example.com.interfaces.RetrofitInterface;
-import emds.example.com.modele.APIResult;
+import emds.example.com.modele.Publication;
+import emds.example.com.modele.PublicationApiResponse;
+import emds.example.com.modele.PublicationDataAPIResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -31,9 +39,14 @@ public class HomeFragment extends Fragment {
     private Retrofit retrofit;
     private RetrofitInterface retrofitInterface;
 
+    private List<Publication> publicationList;
+    private CustomListePublicationAdapter adapter;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         retrofit = new Retrofit.Builder()
                 .baseUrl(getString(R.string.base_url))
@@ -51,13 +64,17 @@ public class HomeFragment extends Fragment {
         NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
 
             if (accessToken != "") {
-                Call<APIResult> call = retrofitInterface.getPublications("Bearer " + accessToken);
-                call.enqueue(new Callback<APIResult>() {
+                Call<PublicationApiResponse> call = retrofitInterface.getPublications("Bearer " + accessToken);
+                call.enqueue(new Callback<PublicationApiResponse>() {
                     @Override
-                    public void onResponse(Call<APIResult> call, Response<APIResult> response) {
-                        APIResult result = response.body();
+                    public void onResponse(Call<PublicationApiResponse> call, Response<PublicationApiResponse> response) {
+                        PublicationApiResponse result = response.body();
                         if (result.getStatus() == 200) {
-
+                            PublicationDataAPIResponse publicationDataAPIResponse = result.getData();
+                            List<Publication> publications = publicationDataAPIResponse.getPublications();
+                            publicationList.clear();
+                            publicationList.addAll(publications);
+                            adapter.notifyDataSetChanged();
                         } else if (result.getStatus() == 401) {
                             loadingBagage.show();
                             Handler handler = new Handler();
@@ -79,7 +96,7 @@ public class HomeFragment extends Fragment {
                     }
 
                     @Override
-                    public void onFailure(Call<APIResult> call, Throwable t) {
+                    public void onFailure(Call<PublicationApiResponse> call, Throwable t) {
                         Toast.makeText(getContext(), "Erreur serveur !", Toast.LENGTH_LONG).show();
                     }
                 });
@@ -88,7 +105,12 @@ public class HomeFragment extends Fragment {
                 Toast.makeText(getContext(), "Authentification requise", Toast.LENGTH_LONG).show();
             }
 
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        publicationList = new ArrayList<>();
+        RecyclerView recyclerView = view.findViewById(R.id.recycler_main);
+        adapter = new CustomListePublicationAdapter(getContext(), publicationList);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        return view;
     }
 }

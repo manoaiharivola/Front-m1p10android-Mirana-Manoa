@@ -3,6 +3,7 @@ package emds.example.com.interfaces;
 import java.util.HashMap;
 
 import emds.example.com.modele.APIResult;
+import emds.example.com.modele.PublicationApiResponse;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -18,5 +19,5 @@ public interface RetrofitInterface {
     Call<APIResult> executeInscription(@Body HashMap<String, String> map);
 
     @GET("/publications")
-    Call<APIResult> getPublications(@Header("Authorization") String bearerToken);
+    Call<PublicationApiResponse> getPublications(@Header("Authorization") String bearerToken);
 }

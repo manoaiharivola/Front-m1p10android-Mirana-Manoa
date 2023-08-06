@@ -31,13 +31,13 @@ public class CustomListePublicationAdapter extends RecyclerView.Adapter<CustomLi
 
     @Override
     public void onBindViewHolder(@NonNull CustomListePublicationViewHolder holder, int position) {
-        holder.publication_lieu.setText(publications.get(position).getNomLieu());
-        holder.publication_utilisateur.setText(publications.get(position).getNomUtilisateur());
-        holder.publication_date.setText(publications.get(position).getDatePublication());
-        holder.publication_description.setText(publications.get(position).getDescriptionPublication());
+        holder.publication_lieu.setText(publications.get(position).getLieuDetails().getLieu_nom());
+        holder.publication_utilisateur.setText(publications.get(position).getUserDetails().getUtilisateur_pseudo());
+        holder.publication_date.setText(publications.get(position).getDate_publication());
+        holder.publication_description.setText(publications.get(position).getPublication_description());
 
-        if(publications.get(position).getUrlImage()!=null) {
-            Picasso.get().load(publications.get(position).getUrlImage()).into(holder.publication_image);
+        if(publications.get(position).getPublication_image()!=null) {
+            Picasso.get().load(publications.get(position).getPublication_image()).into(holder.publication_image);
         }
     }
 
