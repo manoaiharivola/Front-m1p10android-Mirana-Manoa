@@ -17,6 +17,7 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +45,9 @@ public class HomeFragment extends Fragment {
     private CustomListePublicationAdapter adapter;
     ProgressDialog dialog;
 
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private RecyclerView recyclerView;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -64,6 +68,9 @@ public class HomeFragment extends Fragment {
 
         ConnectivityManager connectivityManager = (ConnectivityManager) requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+        recyclerView = view.findViewById(R.id.recycler_main);
 
         if (activeNetwork != null && activeNetwork.isConnected()) {
             dialog = new ProgressDialog(getContext());
@@ -119,6 +126,73 @@ public class HomeFragment extends Fragment {
             recyclerView.setAdapter(adapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         }
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                ConnectivityManager connectivityManager = (ConnectivityManager) requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+                if (activeNetwork != null && activeNetwork.isConnected()) {
+                    dialog = new ProgressDialog(getContext());
+                    dialog.setTitle("Chargement en cours ...");
+                    dialog.show();
+
+                    if (accessToken != "") {
+                        Call<PublicationApiResponse> call = retrofitInterface.getPublications("Bearer " + accessToken);
+                        call.enqueue(new Callback<PublicationApiResponse>() {
+                            @Override
+                            public void onResponse(Call<PublicationApiResponse> call, Response<PublicationApiResponse> response) {
+                                PublicationApiResponse result = response.body();
+                                if (result.getStatus() == 200) {
+                                    PublicationDataAPIResponse publicationDataAPIResponse = result.getData();
+                                    List<Publication> publications = publicationDataAPIResponse.getPublications();
+                                    publicationList.clear();
+                                    publicationList.addAll(publications);
+                                    adapter.notifyDataSetChanged();
+                                    dialog.dismiss();
+                                } else if (result.getStatus() == 401) {
+                                    loadingBagage.show();
+                                    Handler handler = new Handler();
+                                    Runnable runnable = new Runnable() {
+
+                                        @Override
+                                        public void run() {
+                                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                                            editor.remove("access_token");
+                                            editor.apply();
+                                            startActivity(new Intent(getContext(), Login.class));
+                                            Toast.makeText(getContext(), "Session expirée! Authentification requise", Toast.LENGTH_LONG).show();
+                                        }
+                                    };
+                                    handler.postDelayed(runnable, 3000);
+                                } else {
+                                    Toast.makeText(getContext(), "Erreur !", Toast.LENGTH_LONG).show();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<PublicationApiResponse> call, Throwable t) {
+                                Toast.makeText(getContext(), "Erreur serveur !", Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    } else {
+                        startActivity(new Intent(getContext(), Login.class));
+                        Toast.makeText(getContext(), "Authentification requise", Toast.LENGTH_LONG).show();
+                    }
+
+                    publicationList = new ArrayList<>();
+                    RecyclerView recyclerView = view.findViewById(R.id.recycler_main);
+                    adapter = new CustomListePublicationAdapter(getContext(), publicationList);
+                    recyclerView.setAdapter(adapter);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                }
+                else {
+                    Toast.makeText(getContext(), "Pas de connexion Internet", Toast.LENGTH_SHORT).show();
+                }
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
         return view;
     }
 }
