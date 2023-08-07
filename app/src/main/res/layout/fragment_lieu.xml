@@ -551,7 +551,7 @@
                                     android:layout_height="wrap_content">
 
                                     <Button
-                                        android:id="@+id/buttonCategorieToute"
+                                        android:id="@+id/buttonCategorie0"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:text="Toute catégorie"

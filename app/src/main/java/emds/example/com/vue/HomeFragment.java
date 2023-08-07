@@ -93,6 +93,9 @@ public class HomeFragment extends Fragment implements CustomSelectLieuListener {
                             List<Publication> publications = publicationDataAPIResponse.getPublications();
                             publicationList.clear();
                             publicationList.addAll(publications);
+                            if(publicationList.isEmpty()) {
+                                Toast.makeText(getContext(), "Aucun résultat", Toast.LENGTH_LONG).show();
+                            }
                             adapter.notifyDataSetChanged();
                             dialog.dismiss();
                         } else if (result.getStatus() == 401) {
@@ -155,6 +158,9 @@ public class HomeFragment extends Fragment implements CustomSelectLieuListener {
                                     List<Publication> publications = publicationDataAPIResponse.getPublications();
                                     publicationList.clear();
                                     publicationList.addAll(publications);
+                                    if(publicationList.isEmpty()) {
+                                        Toast.makeText(getContext(), "Aucun résultat", Toast.LENGTH_LONG).show();
+                                    }
                                     adapter.notifyDataSetChanged();
                                     dialog.dismiss();
                                 } else if (result.getStatus() == 401) {

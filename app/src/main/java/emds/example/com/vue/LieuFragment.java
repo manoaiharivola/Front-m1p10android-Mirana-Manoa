@@ -62,7 +62,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class LieuFragment extends Fragment implements CustomSelectLieuListener {
+public class LieuFragment extends Fragment implements CustomSelectLieuListener, View.OnClickListener {
     Lieu lieu;
     TextView nom_lieu_details, description_lieu_details, note_lieu_details, abonnes_lieu_details, localisation_lieu_details, contact_lieu_details, mail_lieu_details, nom_lieu_details_publier;
     ImageView image_lieu_details;
@@ -92,6 +92,7 @@ public class LieuFragment extends Fragment implements CustomSelectLieuListener {
 
     private LoadingBagage loadingBagage;
 
+    Button buttonCategorie0, buttonCategorie1, buttonCategorie2, buttonCategorie3, buttonCategorie4, buttonCategorie5, buttonCategorie6;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -124,6 +125,21 @@ public class LieuFragment extends Fragment implements CustomSelectLieuListener {
         progressBarPublier = view.findViewById(R.id.progressBarPublier);
         progressBarPublierPublication = view.findViewById(R.id.progressBarPublierPublication);
         refreshButton = view.findViewById(R.id.refreshButton);
+
+        buttonCategorie0 = view.findViewById(R.id.buttonCategorie0);
+        buttonCategorie0.setOnClickListener(this);
+        buttonCategorie1 = view.findViewById(R.id.buttonCategorie1);
+        buttonCategorie1.setOnClickListener(this);
+        buttonCategorie2 = view.findViewById(R.id.buttonCategorie2);
+        buttonCategorie2.setOnClickListener(this);
+        buttonCategorie3 = view.findViewById(R.id.buttonCategorie3);
+        buttonCategorie3.setOnClickListener(this);
+        buttonCategorie4 = view.findViewById(R.id.buttonCategorie4);
+        buttonCategorie4.setOnClickListener(this);
+        buttonCategorie5 = view.findViewById(R.id.buttonCategorie5);
+        buttonCategorie5.setOnClickListener(this);
+        buttonCategorie6 = view.findViewById(R.id.buttonCategorie6);
+        buttonCategorie6.setOnClickListener(this);
 
         progressBarPublier.setVisibility(View.INVISIBLE);
         progressBarPublierPublication.setVisibility(View.INVISIBLE);
@@ -211,6 +227,9 @@ public class LieuFragment extends Fragment implements CustomSelectLieuListener {
                             List<Publication> publications = publicationDataAPIResponse.getPublications();
                             publicationList.clear();
                             publicationList.addAll(publications);
+                            if(publicationList.isEmpty()) {
+                                Toast.makeText(getContext(), "Aucun résultat", Toast.LENGTH_LONG).show();
+                            }
                             customListePublicationAdapter.notifyDataSetChanged();
                             progressBarPublierPublication.setVisibility(View.INVISIBLE);
                         } else if (result.getStatus() == 401) {
@@ -255,7 +274,7 @@ public class LieuFragment extends Fragment implements CustomSelectLieuListener {
         refreshButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                refresh(accessToken, sharedPreferences, thisFragment);
+                refresh(accessToken, sharedPreferences, thisFragment, null);
             }
         });
 
@@ -272,14 +291,14 @@ public class LieuFragment extends Fragment implements CustomSelectLieuListener {
         }
     }
 
-    private void refresh(String accessToken, SharedPreferences sharedPreferences, CustomSelectLieuListener thisFragment) {
+    private void refresh(String accessToken, SharedPreferences sharedPreferences, CustomSelectLieuListener thisFragment, String fk_categorie_id) {
         ConnectivityManager connectivityManager = (ConnectivityManager) requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
         if (activeNetwork != null && activeNetwork.isConnected()) {
             progressBarPublierPublication.setVisibility(View.VISIBLE);
 
             if (accessToken != "") {
-                Call<PublicationApiResponse> call = retrofitInterface.getPublications("Bearer " + accessToken, lieu.get_id(),null);
+                Call<PublicationApiResponse> call = retrofitInterface.getPublications("Bearer " + accessToken, lieu.get_id(),fk_categorie_id);
                 call.enqueue(new Callback<PublicationApiResponse>() {
                     @Override
                     public void onResponse(Call<PublicationApiResponse> call, Response<PublicationApiResponse> response) {
@@ -289,6 +308,9 @@ public class LieuFragment extends Fragment implements CustomSelectLieuListener {
                             List<Publication> publications = publicationDataAPIResponse.getPublications();
                             publicationList.clear();
                             publicationList.addAll(publications);
+                            if(publicationList.isEmpty()) {
+                                Toast.makeText(getContext(), "Aucun résultat", Toast.LENGTH_LONG).show();
+                            }
                             customListePublicationAdapter.notifyDataSetChanged();
                             progressBarPublierPublication.setVisibility(View.INVISIBLE);
                         } else if (result.getStatus() == 401) {
@@ -359,7 +381,7 @@ public class LieuFragment extends Fragment implements CustomSelectLieuListener {
                                      progressBarPublier.setVisibility(View.INVISIBLE);
                                      Toast.makeText(getContext(), "Nouvelle Publication !", Toast.LENGTH_SHORT).show();
                                      imageViewPublier.setImageResource(R.drawable.ic_baseline_photo_24);
-                                     refresh(accessToken, sharedPreferences, thisFragment);
+                                     refresh(accessToken, sharedPreferences, thisFragment, null);
                                  } else {
                                      progressBarPublier.setVisibility(View.INVISIBLE);
                                      Toast.makeText(getContext(), "Erreur !", Toast.LENGTH_LONG).show();
@@ -407,5 +429,14 @@ public class LieuFragment extends Fragment implements CustomSelectLieuListener {
                 .replace(R.id.fragment_container, lieuFragment)
                 .addToBackStack(null)
                 .commit();
+    }
+
+    @Override
+    public void onClick(View view) {
+        Button button = (Button) view;
+        String category_id = CategorieManager.getIdByNomCategorie(button.getText().toString());
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
+        String accessToken = sharedPreferences.getString("access_token", "");
+        refresh(accessToken, sharedPreferences, this, category_id);
     }
 }

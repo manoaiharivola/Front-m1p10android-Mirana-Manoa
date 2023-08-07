@@ -6,6 +6,7 @@ public class CategorieManager {
 
     static {
         categorieMap = new HashMap<>();
+        categorieMap.put("Toute catégorie", null);
         categorieMap.put("Activité", "64ca378766ecd7b3eb614bde");
         categorieMap.put("Restauration", "64cd56df0f076bc2e714e878");
         categorieMap.put("Culture", "64cd57200f076bc2e714e879");
