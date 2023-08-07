@@ -8,12 +8,15 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.airbnb.lottie.LottieAnimationView;
+
 import emds.example.com.R;
 
 public class CustomListePublicationViewHolder extends RecyclerView.ViewHolder {
     TextView publication_lieu, publication_utilisateur, publication_date, publication_description, publication_categorie, lieu_is_abonne;
     ImageView publication_image;
     CardView cardView;
+    LottieAnimationView publication_reaction;
 
     public CustomListePublicationViewHolder(@NonNull View itemView) {
         super(itemView);
@@ -26,5 +29,6 @@ public class CustomListePublicationViewHolder extends RecyclerView.ViewHolder {
         cardView = itemView.findViewById(R.id.main_container);
         publication_categorie = itemView.findViewById(R.id.publication_categorie);
         lieu_is_abonne = itemView.findViewById(R.id.lieu_is_abonne);
+        publication_reaction = itemView.findViewById(R.id.publication_reaction);
     }
 }

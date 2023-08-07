@@ -14,6 +14,7 @@ public class Publication {
     private UserDetails userDetails;
     private int reactionsCount;
     private boolean isAbonne;
+    private boolean hasReacted;
 
     public String get_id() {
         return _id;
@@ -117,5 +118,13 @@ public class Publication {
 
     public void setAbonne(boolean abonne) {
         isAbonne = abonne;
+    }
+
+    public boolean isHasReacted() {
+        return hasReacted;
+    }
+
+    public void setHasReacted(boolean hasReacted) {
+        this.hasReacted = hasReacted;
     }
 }

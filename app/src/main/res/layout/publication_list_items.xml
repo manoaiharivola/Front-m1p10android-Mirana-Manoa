@@ -141,8 +141,12 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="0dp">
-
+            android:layout_height="50dp">
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/publication_reaction"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                app:lottie_rawRes="@raw/heart_reaction"/>
         </LinearLayout>
         <TextView
             android:id="@+id/publication_description"

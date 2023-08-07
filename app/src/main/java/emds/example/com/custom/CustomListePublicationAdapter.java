@@ -63,6 +63,21 @@ public class CustomListePublicationAdapter extends RecyclerView.Adapter<CustomLi
             }
         });
 
+        holder.publication_reaction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(publications.get(position).isHasReacted()) {
+                    holder.publication_reaction.setSpeed(-1);
+                    holder.publication_reaction.playAnimation();
+                    publications.get(position).setHasReacted(false);
+                } else {
+                    holder.publication_reaction.setSpeed(1);
+                    holder.publication_reaction.playAnimation();
+                    publications.get(position).setHasReacted(true);
+                }
+            }
+        });
+
     }
 
     @Override
