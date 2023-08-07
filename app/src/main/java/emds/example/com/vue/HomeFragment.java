@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -24,7 +25,9 @@ import java.util.List;
 
 import emds.example.com.R;
 import emds.example.com.custom.CustomListePublicationAdapter;
+import emds.example.com.custom.CustomSelectLieuListener;
 import emds.example.com.interfaces.RetrofitInterface;
+import emds.example.com.modele.Lieu;
 import emds.example.com.modele.Publication;
 import emds.example.com.modele.PublicationApiResponse;
 import emds.example.com.modele.PublicationDataAPIResponse;
@@ -34,7 +37,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements CustomSelectLieuListener {
 
     private LoadingBagage loadingBagage;
 
@@ -51,6 +54,8 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        final HomeFragment thisFragment = this;
 
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
@@ -124,7 +129,7 @@ public class HomeFragment extends Fragment {
 
             publicationList = new ArrayList<>();
             RecyclerView recyclerView = view.findViewById(R.id.recycler_main);
-            adapter = new CustomListePublicationAdapter(getContext(), publicationList);
+            adapter = new CustomListePublicationAdapter(getContext(), publicationList, thisFragment);
             recyclerView.setAdapter(adapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         }
@@ -186,7 +191,7 @@ public class HomeFragment extends Fragment {
 
                     publicationList = new ArrayList<>();
                     RecyclerView recyclerView = view.findViewById(R.id.recycler_main);
-                    adapter = new CustomListePublicationAdapter(getContext(), publicationList);
+                    adapter = new CustomListePublicationAdapter(getContext(), publicationList, thisFragment);
                     recyclerView.setAdapter(adapter);
                     recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                 }
@@ -198,5 +203,20 @@ public class HomeFragment extends Fragment {
         });
 
         return view;
+    }
+
+    @Override
+    public void onLieuClicked(Lieu lieu) {
+
+        LieuFragment lieuFragment = new LieuFragment();
+        Bundle args = new Bundle();
+        args.putSerializable("lieu", lieu);
+        lieuFragment.setArguments(args);
+
+        FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, lieuFragment)
+                .addToBackStack(null)
+                .commit();
     }
 }

@@ -2,6 +2,7 @@ package emds.example.com.custom;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -18,10 +19,12 @@ import emds.example.com.util.DateFormat;
 public class CustomListePublicationAdapter extends RecyclerView.Adapter<CustomListePublicationViewHolder> {
     private Context context;
     private List<Publication> publications;
+    private CustomSelectLieuListener lieuListener;
 
-    public CustomListePublicationAdapter(Context context, List<Publication> publications) {
+    public CustomListePublicationAdapter(Context context, List<Publication> publications, CustomSelectLieuListener lieuListener) {
         this.context = context;
         this.publications = publications;
+        this.lieuListener = lieuListener;
     }
 
     @NonNull
@@ -40,6 +43,13 @@ public class CustomListePublicationAdapter extends RecyclerView.Adapter<CustomLi
         if(publications.get(position).getPublication_image()!=null) {
             Picasso.get().load(publications.get(position).getPublication_image()).into(holder.publication_image);
         }
+
+        holder.publication_lieu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                lieuListener.onLieuClicked(publications.get(position).getLieuDetails());
+            }
+        });
     }
 
     @Override
