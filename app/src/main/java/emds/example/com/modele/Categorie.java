@@ -1,6 +1,6 @@
 package emds.example.com.modele;
 
-public class CategorieDetails {
+public class Categorie {
     private String _id;
     private String categorie_nom;
 

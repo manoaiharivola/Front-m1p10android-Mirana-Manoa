@@ -36,7 +36,7 @@ import emds.example.com.util.NumberFormat;
 
 public class LieuFragment extends Fragment {
     Lieu lieu;
-    TextView nom_lieu_details, description_lieu_details, note_lieu_details, abonnes_lieu_details, localisation_lieu_details, contact_lieu_details, mail_lieu_details;
+    TextView nom_lieu_details, description_lieu_details, note_lieu_details, abonnes_lieu_details, localisation_lieu_details, contact_lieu_details, mail_lieu_details, nom_lieu_details_publier;
     ImageView image_lieu_details;
 
     private Button buttonPublier;
@@ -60,6 +60,7 @@ public class LieuFragment extends Fragment {
         contact_lieu_details = view.findViewById(R.id.contact_lieu_details);
         mail_lieu_details = view.findViewById(R.id.mail_lieu_details);
         image_lieu_details = view.findViewById(R.id.image_lieu_details);
+        nom_lieu_details_publier = view.findViewById(R.id.nom_lieu_details_publier);
 
         buttonPublier = view.findViewById(R.id.buttonPublier);
         imageButtonPublier = view.findViewById(R.id.imageButtonPublier);
@@ -95,6 +96,7 @@ public class LieuFragment extends Fragment {
         }
 
         nom_lieu_details.setText(lieu.getLieu_nom());
+        nom_lieu_details_publier.setText(lieu.getLieu_nom());
         description_lieu_details.setText(lieu.getLieu_description());
         note_lieu_details.setText(NumberFormat.formatVueFloat(lieu.getNote_moyenne())+"/5");
         if(lieu.getAbonnes() > 1) {
