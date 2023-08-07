@@ -536,7 +536,88 @@
                                     tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
                             </LinearLayout>
                         </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="horizontal"
+                            android:gravity="center">
 
+                            <HorizontalScrollView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content">
+
+                                    <Button
+                                        android:id="@+id/buttonCategorieToute"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Toute catégorie"
+                                        android:textSize="12sp"
+                                        android:padding="6dp"
+                                        android:layout_margin="6dp"/>
+
+                                    <Button
+                                        android:id="@+id/buttonCategorie1"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Activité"
+                                        android:textSize="12sp"
+                                        android:padding="6dp"
+                                        android:layout_margin="6dp"/>
+
+                                    <Button
+                                        android:id="@+id/buttonCategorie2"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Restauration"
+                                        android:textSize="12sp"
+                                        android:padding="6dp"
+                                        android:layout_margin="6dp"/>
+
+                                    <Button
+                                        android:id="@+id/buttonCategorie3"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Culture"
+                                        android:textSize="12sp"
+                                        android:padding="6dp"
+                                        android:layout_margin="6dp"/>
+
+                                    <Button
+                                        android:id="@+id/buttonCategorie4"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Biodiversité"
+                                        android:textSize="12sp"
+                                        android:padding="6dp"
+                                        android:layout_margin="6dp"/>
+
+                                    <Button
+                                        android:id="@+id/buttonCategorie5"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Service"
+                                        android:textSize="12sp"
+                                        android:padding="6dp"
+                                        android:layout_margin="6dp"/>
+
+
+                                    <Button
+                                        android:id="@+id/buttonCategorie6"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Autres"
+                                        android:textSize="12sp"
+                                        android:padding="6dp"
+                                        android:layout_margin="6dp"/>
+
+                                </LinearLayout>
+                            </HorizontalScrollView>
+
+                        </LinearLayout>
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="50dp"
