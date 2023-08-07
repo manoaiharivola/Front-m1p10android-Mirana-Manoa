@@ -3,12 +3,14 @@ package emds.example.com.interfaces;
 import java.util.HashMap;
 
 import emds.example.com.modele.APIResult;
+import emds.example.com.modele.LieuApiResponse;
 import emds.example.com.modele.PublicationApiResponse;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
+import retrofit2.http.Query;
 
 public interface RetrofitInterface {
 
@@ -20,4 +22,10 @@ public interface RetrofitInterface {
 
     @GET("/publications")
     Call<PublicationApiResponse> getPublications(@Header("Authorization") String bearerToken);
+
+    @GET("/lieux")
+    Call<LieuApiResponse> getLieux(
+            @Header("Authorization") String bearerToken,
+            @Query("lieu_nom") String lieu_nom
+    );
 }
