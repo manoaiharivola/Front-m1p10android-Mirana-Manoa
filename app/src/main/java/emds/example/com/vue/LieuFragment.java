@@ -94,6 +94,9 @@ public class LieuFragment extends Fragment implements CustomSelectLieuListener, 
 
     Button buttonCategorie0, buttonCategorie1, buttonCategorie2, buttonCategorie3, buttonCategorie4, buttonCategorie5, buttonCategorie6;
 
+    private Button buttonAbonner;
+    private Button buttonDesabonner;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -174,6 +177,17 @@ public class LieuFragment extends Fragment implements CustomSelectLieuListener, 
         mail_lieu_details.setText(lieu.getLieu_mail());
         if(lieu.getLieu_image()!=null) {
             Picasso.get().load(lieu.getLieu_image()).into(image_lieu_details);
+        }
+
+        buttonAbonner = view.findViewById(R.id.buttonAbonner);
+        buttonDesabonner = view.findViewById(R.id.buttonDesabonner);
+
+        if(lieu.isAbonne()) {
+            buttonAbonner.setVisibility(View.GONE);
+            buttonDesabonner.setVisibility(View.VISIBLE);
+        } else {
+            buttonAbonner.setVisibility(View.VISIBLE);
+            buttonDesabonner.setVisibility(View.GONE);
         }
 
         buttonPublier.setOnClickListener(new View.OnClickListener() {

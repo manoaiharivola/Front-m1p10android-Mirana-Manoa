@@ -13,6 +13,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import emds.example.com.R;
+import emds.example.com.modele.Lieu;
 import emds.example.com.modele.Publication;
 import emds.example.com.util.DateFormat;
 
@@ -56,11 +57,12 @@ public class CustomListePublicationAdapter extends RecyclerView.Adapter<CustomLi
         holder.publication_lieu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                lieuListener.onLieuClicked(publications.get(position).getLieuDetails());
+                Lieu lieu = publications.get(position).getLieuDetails();
+                lieu.setAbonne(publications.get(position).isAbonne());
+                lieuListener.onLieuClicked(lieu);
             }
         });
-
-
+        
     }
 
     @Override
