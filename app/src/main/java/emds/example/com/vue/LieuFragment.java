@@ -296,6 +296,7 @@ public class LieuFragment extends Fragment implements CustomSelectLieuListener, 
                     public void onResponse(Call<APIResult> call, Response<APIResult> response) {
                         APIResult result = response.body();
                         if(result.getStatus() == 201) {
+                            lieu.setAbonnes(lieu.getAbonnes()+1);
                             lieu.setAbonne(true);
                             onLieuClicked(lieu);
                             Toast.makeText(getContext(), "Vous êtes maintenant abonné à ce lieu", Toast.LENGTH_LONG).show();
@@ -321,6 +322,7 @@ public class LieuFragment extends Fragment implements CustomSelectLieuListener, 
                     public void onResponse(Call<APIResult> call, Response<APIResult> response) {
                         APIResult result = response.body();
                         if(result.getStatus() == 200) {
+                            lieu.setAbonnes(lieu.getAbonnes()-1);
                             lieu.setAbonne(false);
                             onLieuClicked(lieu);
                             Toast.makeText(getContext(), "Vous vous êtes désabonné de ce lieu!", Toast.LENGTH_LONG).show();
