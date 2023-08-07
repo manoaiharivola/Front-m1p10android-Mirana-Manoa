@@ -13,7 +13,7 @@ import com.airbnb.lottie.LottieAnimationView;
 import emds.example.com.R;
 
 public class CustomListePublicationViewHolder extends RecyclerView.ViewHolder {
-    TextView publication_lieu, publication_utilisateur, publication_date, publication_description, publication_categorie, lieu_is_abonne;
+    TextView publication_lieu, publication_utilisateur, publication_date, publication_description, publication_categorie, lieu_is_abonne, publication_nombre_reactions;
     ImageView publication_image;
     CardView cardView;
     LottieAnimationView publication_reaction;
@@ -30,5 +30,6 @@ public class CustomListePublicationViewHolder extends RecyclerView.ViewHolder {
         publication_categorie = itemView.findViewById(R.id.publication_categorie);
         lieu_is_abonne = itemView.findViewById(R.id.lieu_is_abonne);
         publication_reaction = itemView.findViewById(R.id.publication_reaction);
+        publication_nombre_reactions = itemView.findViewById(R.id.publication_nombre_reactions);
     }
 }

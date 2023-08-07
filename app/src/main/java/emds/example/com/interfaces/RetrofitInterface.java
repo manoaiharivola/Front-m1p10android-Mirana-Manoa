@@ -35,6 +35,13 @@ public interface RetrofitInterface {
     @POST("/lieux/subscribe")
     Call<APIResult> sAbonner(@Header("Authorization") String bearerToken, @Body HashMap<String, String> map);
 
+
     @POST("/lieux/unsubscribe")
     Call<APIResult> seDesabonner(@Header("Authorization") String bearerToken, @Body HashMap<String, String> map);
+
+    @POST("/reactions")
+    Call<APIResult> reagir(@Header("Authorization") String bearerToken, @Body HashMap<String, String> map);
+
+    @POST("/reactions/delete")
+    Call<APIResult> supprimerReaction(@Header("Authorization") String bearerToken, @Body HashMap<String, String> map);
 }

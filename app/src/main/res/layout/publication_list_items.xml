@@ -147,6 +147,14 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 app:lottie_rawRes="@raw/heart_reaction"/>
+
+            <TextView
+                android:id="@+id/publication_nombre_reactions"
+                android:gravity="center"
+                android:layout_width="40dp"
+                android:layout_height="50dp"
+                android:text="10"
+                android:textSize="18sp"></TextView>
         </LinearLayout>
         <TextView
             android:id="@+id/publication_description"
