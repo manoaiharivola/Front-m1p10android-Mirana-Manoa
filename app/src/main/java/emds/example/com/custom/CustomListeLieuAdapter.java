@@ -43,6 +43,14 @@ public class CustomListeLieuAdapter extends RecyclerView.Adapter<CustomListeLieu
         }
         holder.note_lieu.setText(NumberFormat.formatVueFloat(lieux.get(position).getNote_moyenne()) + "/5");
 
+        if(lieux.get(position).isAbonne() != true) {
+            holder.lieu_is_abonne_liste_lieu.setVisibility(View.GONE);
+        }
+        else {
+            holder.lieu_is_abonne_liste_lieu.setVisibility(View.VISIBLE);
+        }
+
+
         holder.lieu_cardview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
