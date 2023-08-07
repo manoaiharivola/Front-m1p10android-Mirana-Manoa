@@ -21,7 +21,7 @@ public interface RetrofitInterface {
     Call<APIResult> executeInscription(@Body HashMap<String, String> map);
 
     @GET("/publications")
-    Call<PublicationApiResponse> getPublications(@Header("Authorization") String bearerToken);
+    Call<PublicationApiResponse> getPublications(@Header("Authorization") String bearerToken, @Query("fk_lieu_id") String fk_lieu_id, @Query("fk_categorie_id") String fk_categorie_id);
 
     @GET("/lieux")
     Call<LieuApiResponse> getLieux(

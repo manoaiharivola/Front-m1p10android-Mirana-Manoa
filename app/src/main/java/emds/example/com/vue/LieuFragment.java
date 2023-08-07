@@ -201,7 +201,7 @@ public class LieuFragment extends Fragment implements CustomSelectLieuListener {
             progressBarPublierPublication.setVisibility(View.VISIBLE);
 
             if (accessToken != "") {
-                Call<PublicationApiResponse> call = retrofitInterface.getPublications("Bearer " + accessToken);
+                Call<PublicationApiResponse> call = retrofitInterface.getPublications("Bearer " + accessToken, lieu.get_id(),null);
                 call.enqueue(new Callback<PublicationApiResponse>() {
                     @Override
                     public void onResponse(Call<PublicationApiResponse> call, Response<PublicationApiResponse> response) {
@@ -279,7 +279,7 @@ public class LieuFragment extends Fragment implements CustomSelectLieuListener {
             progressBarPublierPublication.setVisibility(View.VISIBLE);
 
             if (accessToken != "") {
-                Call<PublicationApiResponse> call = retrofitInterface.getPublications("Bearer " + accessToken);
+                Call<PublicationApiResponse> call = retrofitInterface.getPublications("Bearer " + accessToken, lieu.get_id(),null);
                 call.enqueue(new Callback<PublicationApiResponse>() {
                     @Override
                     public void onResponse(Call<PublicationApiResponse> call, Response<PublicationApiResponse> response) {
