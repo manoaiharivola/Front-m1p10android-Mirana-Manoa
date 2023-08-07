@@ -1,6 +1,6 @@
 package emds.example.com.modele;
 
-public class LieuDetails {
+public class Lieu {
     private String _id;
     private String lieu_image;
     private String lieu_nom;
@@ -8,6 +8,8 @@ public class LieuDetails {
     private String lieu_description;
     private String lieu_localisation;
     private String lieu_mail;
+    private int abonnes;
+    private float note_moyenne;
 
     public String get_id() {
         return _id;
@@ -63,5 +65,21 @@ public class LieuDetails {
 
     public void setLieu_mail(String lieu_mail) {
         this.lieu_mail = lieu_mail;
+    }
+
+    public int getAbonnes() {
+        return abonnes;
+    }
+
+    public void setAbonnes(int abonnes) {
+        this.abonnes = abonnes;
+    }
+
+    public float getNote_moyenne() {
+        return note_moyenne;
+    }
+
+    public void setNote_moyenne(float note_moyenne) {
+        this.note_moyenne = note_moyenne;
     }
 }
