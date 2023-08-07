@@ -167,7 +167,7 @@ public class LieuFragment extends Fragment implements CustomSelectLieuListener {
                 String description = editTextTextMultiLineDescription.getText().toString();
                 String idLieu = lieu.get_id();
                 if(imageUri != null) {
-                    publier(imageUri, idLieu, idCategorie, description);
+                    publier(imageUri, idLieu, idCategorie, description, thisFragment);
                 } else {
                     Toast.makeText(getContext(), "Veuillez selectionner une image !", Toast.LENGTH_SHORT).show();
                 }
@@ -255,65 +255,7 @@ public class LieuFragment extends Fragment implements CustomSelectLieuListener {
         refreshButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ConnectivityManager connectivityManager = (ConnectivityManager) requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-                NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
-                if (activeNetwork != null && activeNetwork.isConnected()) {
-                    progressBarPublierPublication.setVisibility(View.VISIBLE);
-
-                    if (accessToken != "") {
-                        Call<PublicationApiResponse> call = retrofitInterface.getPublications("Bearer " + accessToken);
-                        call.enqueue(new Callback<PublicationApiResponse>() {
-                            @Override
-                            public void onResponse(Call<PublicationApiResponse> call, Response<PublicationApiResponse> response) {
-                                PublicationApiResponse result = response.body();
-                                if (result.getStatus() == 200) {
-                                    PublicationDataAPIResponse publicationDataAPIResponse = result.getData();
-                                    List<Publication> publications = publicationDataAPIResponse.getPublications();
-                                    publicationList.clear();
-                                    publicationList.addAll(publications);
-                                    customListePublicationAdapter.notifyDataSetChanged();
-                                    progressBarPublierPublication.setVisibility(View.INVISIBLE);
-                                } else if (result.getStatus() == 401) {
-                                    loadingBagage.show();
-                                    Handler handler = new Handler();
-                                    Runnable runnable = new Runnable() {
-
-                                        @Override
-                                        public void run() {
-                                            SharedPreferences.Editor editor = sharedPreferences.edit();
-                                            editor.remove("access_token");
-                                            editor.apply();
-                                            startActivity(new Intent(getContext(), Login.class));
-                                            requireActivity().finish();
-                                            Toast.makeText(getContext(), "Session expirée! Authentification requise", Toast.LENGTH_LONG).show();
-                                        }
-                                    };
-                                    handler.postDelayed(runnable, 2000);
-                                } else {
-                                    Toast.makeText(getContext(), "Erreur !", Toast.LENGTH_LONG).show();
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Call<PublicationApiResponse> call, Throwable t) {
-                                Toast.makeText(getContext(), "Erreur serveur !", Toast.LENGTH_LONG).show();
-                            }
-                        });
-                    } else {
-                        startActivity(new Intent(getContext(), Login.class));
-                        requireActivity().finish();
-                        Toast.makeText(getContext(), "Authentification requise", Toast.LENGTH_LONG).show();
-                    }
-
-                    publicationList = new ArrayList<>();
-                    RecyclerView recyclerView = thisFragment.getView().findViewById(R.id.recycler_main_lieu);
-                    customListePublicationAdapter = new CustomListePublicationAdapter(getContext(), publicationList, thisFragment);
-                    recyclerView.setAdapter(customListePublicationAdapter);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                }
-                else {
-                    Toast.makeText(getContext(), "Pas de connexion Internet", Toast.LENGTH_SHORT).show();
-                }
+                refresh(accessToken, sharedPreferences, thisFragment);
             }
         });
 
@@ -330,7 +272,69 @@ public class LieuFragment extends Fragment implements CustomSelectLieuListener {
         }
     }
 
-    private void publier(Uri uri, String idLieu, String idCategorie, String description) {
+    private void refresh(String accessToken, SharedPreferences sharedPreferences, CustomSelectLieuListener thisFragment) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+        if (activeNetwork != null && activeNetwork.isConnected()) {
+            progressBarPublierPublication.setVisibility(View.VISIBLE);
+
+            if (accessToken != "") {
+                Call<PublicationApiResponse> call = retrofitInterface.getPublications("Bearer " + accessToken);
+                call.enqueue(new Callback<PublicationApiResponse>() {
+                    @Override
+                    public void onResponse(Call<PublicationApiResponse> call, Response<PublicationApiResponse> response) {
+                        PublicationApiResponse result = response.body();
+                        if (result.getStatus() == 200) {
+                            PublicationDataAPIResponse publicationDataAPIResponse = result.getData();
+                            List<Publication> publications = publicationDataAPIResponse.getPublications();
+                            publicationList.clear();
+                            publicationList.addAll(publications);
+                            customListePublicationAdapter.notifyDataSetChanged();
+                            progressBarPublierPublication.setVisibility(View.INVISIBLE);
+                        } else if (result.getStatus() == 401) {
+                            loadingBagage.show();
+                            Handler handler = new Handler();
+                            Runnable runnable = new Runnable() {
+
+                                @Override
+                                public void run() {
+                                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                                    editor.remove("access_token");
+                                    editor.apply();
+                                    startActivity(new Intent(getContext(), Login.class));
+                                    requireActivity().finish();
+                                    Toast.makeText(getContext(), "Session expirée! Authentification requise", Toast.LENGTH_LONG).show();
+                                }
+                            };
+                            handler.postDelayed(runnable, 2000);
+                        } else {
+                            Toast.makeText(getContext(), "Erreur !", Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<PublicationApiResponse> call, Throwable t) {
+                        Toast.makeText(getContext(), "Erreur serveur !", Toast.LENGTH_LONG).show();
+                    }
+                });
+            } else {
+                startActivity(new Intent(getContext(), Login.class));
+                requireActivity().finish();
+                Toast.makeText(getContext(), "Authentification requise", Toast.LENGTH_LONG).show();
+            }
+
+            publicationList = new ArrayList<>();
+            RecyclerView recyclerView = getView().findViewById(R.id.recycler_main_lieu);
+            customListePublicationAdapter = new CustomListePublicationAdapter(getContext(), publicationList, thisFragment);
+            recyclerView.setAdapter(customListePublicationAdapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        }
+        else {
+            Toast.makeText(getContext(), "Pas de connexion Internet", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void publier(Uri uri, String idLieu, String idCategorie, String description, CustomSelectLieuListener thisFragment) {
         StorageReference fileRef = reference.child(System.currentTimeMillis() + "." + getFileExtension(uri));
         fileRef.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -355,6 +359,7 @@ public class LieuFragment extends Fragment implements CustomSelectLieuListener {
                                      progressBarPublier.setVisibility(View.INVISIBLE);
                                      Toast.makeText(getContext(), "Nouvelle Publication !", Toast.LENGTH_SHORT).show();
                                      imageViewPublier.setImageResource(R.drawable.ic_baseline_photo_24);
+                                     refresh(accessToken, sharedPreferences, thisFragment);
                                  } else {
                                      progressBarPublier.setVisibility(View.INVISIBLE);
                                      Toast.makeText(getContext(), "Erreur !", Toast.LENGTH_LONG).show();
