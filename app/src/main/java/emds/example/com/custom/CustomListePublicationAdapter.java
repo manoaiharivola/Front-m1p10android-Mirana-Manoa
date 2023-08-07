@@ -39,7 +39,7 @@ public class CustomListePublicationAdapter extends RecyclerView.Adapter<CustomLi
         holder.publication_utilisateur.setText(publications.get(position).getUserDetails().getUtilisateur_pseudo());
         holder.publication_date.setText(DateFormat.formatVueDate(publications.get(position).getDate_publication()));
         holder.publication_description.setText(publications.get(position).getPublication_description());
-
+        holder.publication_categorie.setText(publications.get(position).getCategorieDetails().getCategorie_nom());
         if(publications.get(position).getPublication_image()!=null) {
             Picasso.get().load(publications.get(position).getPublication_image()).into(holder.publication_image);
         }

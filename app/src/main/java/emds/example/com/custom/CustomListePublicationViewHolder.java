@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import emds.example.com.R;
 
 public class CustomListePublicationViewHolder extends RecyclerView.ViewHolder {
-    TextView publication_lieu, publication_utilisateur, publication_date, publication_description;
+    TextView publication_lieu, publication_utilisateur, publication_date, publication_description, publication_categorie;
     ImageView publication_image;
     CardView cardView;
 
@@ -24,5 +24,7 @@ public class CustomListePublicationViewHolder extends RecyclerView.ViewHolder {
         publication_description = itemView.findViewById(R.id.publication_description);
         publication_image = itemView.findViewById(R.id.publication_image);
         cardView = itemView.findViewById(R.id.main_container);
+        publication_categorie = itemView.findViewById(R.id.publication_categorie);
+
     }
 }
