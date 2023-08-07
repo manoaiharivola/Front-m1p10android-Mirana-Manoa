@@ -133,7 +133,9 @@ public class LieuFragment extends Fragment {
                         PublicationAPublier model = new PublicationAPublier(uri.toString());
                         String modelId = root.push().getKey();
                         root.child(modelId).setValue(model);
+                        progressBarPublier.setVisibility(View.INVISIBLE);
                         Toast.makeText(getContext(), "Succès de l'ajout de photo !", Toast.LENGTH_SHORT).show();
+                        imageViewPublier.setImageResource(R.drawable.ic_baseline_photo_24);
                     }
                 });
             }
