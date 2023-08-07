@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,6 +25,7 @@ import java.util.List;
 
 import emds.example.com.R;
 import emds.example.com.custom.CustomListeLieuAdapter;
+import emds.example.com.custom.CustomSelectLieuListener;
 import emds.example.com.interfaces.RetrofitInterface;
 import emds.example.com.modele.Lieu;
 import emds.example.com.modele.LieuApiResponse;
@@ -34,7 +36,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class ChercherLieuFragment extends Fragment {
+public class ChercherLieuFragment extends Fragment implements CustomSelectLieuListener {
 
     private LoadingBagage loadingBagage;
 
@@ -52,7 +54,7 @@ public class ChercherLieuFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-
+        final ChercherLieuFragment thisFragment = this;
 
         View view = inflater.inflate(R.layout.fragment_chercher_lieu, container, false);
 
@@ -133,7 +135,7 @@ public class ChercherLieuFragment extends Fragment {
 
                 lieuxList = new ArrayList<>();
                 RecyclerView recyclerView = view.findViewById(R.id.recycler_main1);
-                adapter = new CustomListeLieuAdapter(getContext(), lieuxList);
+                adapter = new CustomListeLieuAdapter(getContext(), lieuxList, thisFragment);
                 recyclerView.setAdapter(adapter);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                 return true;
@@ -145,5 +147,20 @@ public class ChercherLieuFragment extends Fragment {
             }
         });
         return view;
+    }
+
+    @Override
+    public void onLieuClicked(Lieu lieu) {
+
+        LieuFragment lieuFragment = new LieuFragment();
+        Bundle args = new Bundle();
+        args.putSerializable("lieu", lieu);
+        lieuFragment.setArguments(args);
+
+        FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, lieuFragment)
+                .addToBackStack(null)
+                .commit();
     }
 }

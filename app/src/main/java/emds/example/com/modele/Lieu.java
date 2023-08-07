@@ -1,6 +1,8 @@
 package emds.example.com.modele;
 
-public class Lieu {
+import java.io.Serializable;
+
+public class Lieu implements Serializable {
     private String _id;
     private String lieu_image;
     private String lieu_nom;

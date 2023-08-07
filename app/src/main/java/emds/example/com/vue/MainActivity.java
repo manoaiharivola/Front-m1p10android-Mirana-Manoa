@@ -25,8 +25,6 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
                 String accessToken = sharedPreferences.getString("access_token", "");
-                System.out.println("-------------------");
-                System.out.println(accessToken);
 
                 if(accessToken != "") {
                     Intent intent = new Intent(MainActivity.this, NavMenu.class);

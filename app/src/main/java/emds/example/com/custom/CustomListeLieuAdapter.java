@@ -2,9 +2,11 @@ package emds.example.com.custom;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -16,10 +18,12 @@ import emds.example.com.util.NumberFormat;
 public class CustomListeLieuAdapter extends RecyclerView.Adapter<CustomListeLieuViewHolder>{
     private Context context;
     private List<Lieu> lieux;
+    private CustomSelectLieuListener lieuListener;
 
-    public CustomListeLieuAdapter(Context context, List<Lieu> lieux) {
+    public CustomListeLieuAdapter(Context context, List<Lieu> lieux, CustomSelectLieuListener lieuListener) {
         this.context = context;
         this.lieux = lieux;
+        this.lieuListener = lieuListener;
     }
 
     @NonNull
@@ -38,6 +42,13 @@ public class CustomListeLieuAdapter extends RecyclerView.Adapter<CustomListeLieu
             holder.abonnes_lieu.setText(lieux.get(position).getAbonnes() + " abonné");
         }
         holder.note_lieu.setText(NumberFormat.formatVueFloat(lieux.get(position).getNote_moyenne()) + "/5");
+
+        holder.lieu_cardview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                lieuListener.onLieuClicked(lieux.get(position));
+            }
+        });
     }
 
     @Override

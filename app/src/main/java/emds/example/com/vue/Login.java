@@ -87,11 +87,12 @@ public class Login extends AppCompatActivity {
                         map.put("mail", mail);
                         map.put("mdp", mdp);
 
-                        loadingAirplane.show();
+
                         Call<APIResult> call = retrofitInterface.executeLogin(map);
                         call.enqueue(new Callback<APIResult>() {
                             @Override
                             public void onResponse(Call<APIResult> call, Response<APIResult> response) {
+                                loadingAirplane.show();
                                 APIResult result = response.body();
                                 Handler handler = new Handler();
                                 Runnable runnable = new Runnable() {
