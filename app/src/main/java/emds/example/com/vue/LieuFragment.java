@@ -3,10 +3,14 @@ package emds.example.com.vue;
 import static android.app.Activity.RESULT_OK;
 
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +27,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -34,12 +41,19 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import emds.example.com.R;
+import emds.example.com.custom.CustomListePublicationAdapter;
+import emds.example.com.custom.CustomSelectLieuListener;
 import emds.example.com.interfaces.RetrofitInterface;
 import emds.example.com.modele.APIResult;
 import emds.example.com.modele.Lieu;
+import emds.example.com.modele.Publication;
+import emds.example.com.modele.PublicationApiResponse;
+import emds.example.com.modele.PublicationDataAPIResponse;
 import emds.example.com.util.CategorieManager;
 import emds.example.com.util.NumberFormat;
 import retrofit2.Call;
@@ -48,16 +62,19 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class LieuFragment extends Fragment {
+public class LieuFragment extends Fragment implements CustomSelectLieuListener {
     Lieu lieu;
     TextView nom_lieu_details, description_lieu_details, note_lieu_details, abonnes_lieu_details, localisation_lieu_details, contact_lieu_details, mail_lieu_details, nom_lieu_details_publier;
     ImageView image_lieu_details;
     EditText editTextTextMultiLineDescription;
 
+    private CustomListePublicationAdapter customListePublicationAdapter;
+
     private Button buttonPublier;
     private ImageButton imageButtonPublier;
     private ImageView imageViewPublier;
     private ProgressBar progressBarPublier;
+    private ProgressBar progressBarPublierPublication;
     private DatabaseReference root = FirebaseDatabase.getInstance().getReference("Image");
     private StorageReference reference = FirebaseStorage.getInstance().getReference();
     private Uri imageUri;
@@ -68,10 +85,20 @@ public class LieuFragment extends Fragment {
     private Retrofit retrofit;
     private RetrofitInterface retrofitInterface;
 
+    private ImageButton refreshButton;
+    private RecyclerView recyclerView;
+
+    private List<Publication> publicationList;
+
+    private LoadingBagage loadingBagage;
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_lieu, container, false);
+
+        final LieuFragment thisFragment = this;
 
         retrofit = new Retrofit.Builder()
                 .baseUrl(getString(R.string.base_url))
@@ -95,8 +122,11 @@ public class LieuFragment extends Fragment {
         imageButtonPublier = view.findViewById(R.id.imageButtonPublier);
         imageViewPublier = view.findViewById(R.id.imageViewPublier);
         progressBarPublier = view.findViewById(R.id.progressBarPublier);
+        progressBarPublierPublication = view.findViewById(R.id.progressBarPublierPublication);
+        refreshButton = view.findViewById(R.id.refreshButton);
 
         progressBarPublier.setVisibility(View.INVISIBLE);
+        progressBarPublierPublication.setVisibility(View.INVISIBLE);
 
         imageButtonPublier.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -153,6 +183,136 @@ public class LieuFragment extends Fragment {
                 if (selectedRadioButton != null) {
                     String selectedText = selectedRadioButton.getText().toString();
                     selectedCategorie = selectedText;
+                }
+            }
+        });
+
+        recyclerView = view.findViewById(R.id.recycler_main_lieu);
+
+        loadingBagage = new LoadingBagage(getContext());
+
+        ConnectivityManager connectivityManager = (ConnectivityManager) requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
+        String accessToken = sharedPreferences.getString("access_token", "");
+
+        if (activeNetwork != null && activeNetwork.isConnected()) {
+            progressBarPublierPublication.setVisibility(View.VISIBLE);
+
+            if (accessToken != "") {
+                Call<PublicationApiResponse> call = retrofitInterface.getPublications("Bearer " + accessToken);
+                call.enqueue(new Callback<PublicationApiResponse>() {
+                    @Override
+                    public void onResponse(Call<PublicationApiResponse> call, Response<PublicationApiResponse> response) {
+                        PublicationApiResponse result = response.body();
+                        if (result.getStatus() == 200) {
+                            PublicationDataAPIResponse publicationDataAPIResponse = result.getData();
+                            List<Publication> publications = publicationDataAPIResponse.getPublications();
+                            publicationList.clear();
+                            publicationList.addAll(publications);
+                            customListePublicationAdapter.notifyDataSetChanged();
+                            progressBarPublierPublication.setVisibility(View.INVISIBLE);
+                        } else if (result.getStatus() == 401) {
+                            loadingBagage.show();
+                            Handler handler = new Handler();
+                            Runnable runnable = new Runnable() {
+
+                                @Override
+                                public void run() {
+                                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                                    editor.remove("access_token");
+                                    editor.apply();
+                                    startActivity(new Intent(getContext(), Login.class));
+                                    requireActivity().finish();
+                                    Toast.makeText(getContext(), "Session expirée! Authentification requise", Toast.LENGTH_LONG).show();
+                                }
+                            };
+                            handler.postDelayed(runnable, 2000);
+                        } else {
+                            Toast.makeText(getContext(), "Erreur !", Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<PublicationApiResponse> call, Throwable t) {
+                        Toast.makeText(getContext(), "Erreur serveur !", Toast.LENGTH_LONG).show();
+                    }
+                });
+            } else {
+                startActivity(new Intent(getContext(), Login.class));
+                requireActivity().finish();
+                Toast.makeText(getContext(), "Authentification requise", Toast.LENGTH_LONG).show();
+            }
+
+            publicationList = new ArrayList<>();
+            RecyclerView recyclerView = view.findViewById(R.id.recycler_main_lieu);
+            customListePublicationAdapter = new CustomListePublicationAdapter(getContext(), publicationList, thisFragment);
+            recyclerView.setAdapter(customListePublicationAdapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        }
+
+        refreshButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ConnectivityManager connectivityManager = (ConnectivityManager) requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+                if (activeNetwork != null && activeNetwork.isConnected()) {
+                    progressBarPublierPublication.setVisibility(View.VISIBLE);
+
+                    if (accessToken != "") {
+                        Call<PublicationApiResponse> call = retrofitInterface.getPublications("Bearer " + accessToken);
+                        call.enqueue(new Callback<PublicationApiResponse>() {
+                            @Override
+                            public void onResponse(Call<PublicationApiResponse> call, Response<PublicationApiResponse> response) {
+                                PublicationApiResponse result = response.body();
+                                if (result.getStatus() == 200) {
+                                    PublicationDataAPIResponse publicationDataAPIResponse = result.getData();
+                                    List<Publication> publications = publicationDataAPIResponse.getPublications();
+                                    publicationList.clear();
+                                    publicationList.addAll(publications);
+                                    customListePublicationAdapter.notifyDataSetChanged();
+                                    progressBarPublierPublication.setVisibility(View.INVISIBLE);
+                                } else if (result.getStatus() == 401) {
+                                    loadingBagage.show();
+                                    Handler handler = new Handler();
+                                    Runnable runnable = new Runnable() {
+
+                                        @Override
+                                        public void run() {
+                                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                                            editor.remove("access_token");
+                                            editor.apply();
+                                            startActivity(new Intent(getContext(), Login.class));
+                                            requireActivity().finish();
+                                            Toast.makeText(getContext(), "Session expirée! Authentification requise", Toast.LENGTH_LONG).show();
+                                        }
+                                    };
+                                    handler.postDelayed(runnable, 2000);
+                                } else {
+                                    Toast.makeText(getContext(), "Erreur !", Toast.LENGTH_LONG).show();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<PublicationApiResponse> call, Throwable t) {
+                                Toast.makeText(getContext(), "Erreur serveur !", Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    } else {
+                        startActivity(new Intent(getContext(), Login.class));
+                        requireActivity().finish();
+                        Toast.makeText(getContext(), "Authentification requise", Toast.LENGTH_LONG).show();
+                    }
+
+                    publicationList = new ArrayList<>();
+                    RecyclerView recyclerView = thisFragment.getView().findViewById(R.id.recycler_main_lieu);
+                    customListePublicationAdapter = new CustomListePublicationAdapter(getContext(), publicationList, thisFragment);
+                    recyclerView.setAdapter(customListePublicationAdapter);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                }
+                else {
+                    Toast.makeText(getContext(), "Pas de connexion Internet", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -228,5 +388,19 @@ public class LieuFragment extends Fragment {
         ContentResolver cr = getContext().getContentResolver();
         MimeTypeMap mime = MimeTypeMap.getSingleton();
         return mime.getExtensionFromMimeType(cr.getType(mUri));
+    }
+
+    @Override
+    public void onLieuClicked(Lieu lieu) {
+        LieuFragment lieuFragment = new LieuFragment();
+        Bundle args = new Bundle();
+        args.putSerializable("lieu", lieu);
+        lieuFragment.setArguments(args);
+
+        FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, lieuFragment)
+                .addToBackStack(null)
+                .commit();
     }
 }
