@@ -42,6 +42,8 @@ public class CustomListePublicationAdapter extends RecyclerView.Adapter<CustomLi
         holder.publication_categorie.setText(publications.get(position).getCategorieDetails().getCategorie_nom());
         if(publications.get(position).getPublication_image()!=null) {
             Picasso.get().load(publications.get(position).getPublication_image()).into(holder.publication_image);
+        } else {
+            holder.publication_image.setImageResource(R.drawable.not_available);
         }
 
         holder.publication_lieu.setOnClickListener(new View.OnClickListener() {
