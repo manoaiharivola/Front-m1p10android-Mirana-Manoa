@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "286254472727",
+    "project_id": "dagostagram-5741f",
+    "storage_bucket": "dagostagram-5741f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:286254472727:android:970d21d196af2e9da10652",
+        "android_client_info": {
+          "package_name": "emds.example.com"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "286254472727-ojcja08ho2dl6s8rnhvbr7ara108v4tj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBPfjQYQhlishmhDz_cPsyGzFo5mHEXQqg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "286254472727-ojcja08ho2dl6s8rnhvbr7ara108v4tj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
