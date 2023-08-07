@@ -13,6 +13,7 @@ public class Publication {
     private Categorie categorieDetails;
     private UserDetails userDetails;
     private int reactionsCount;
+    private boolean isAbonne;
 
     public String get_id() {
         return _id;
@@ -108,5 +109,13 @@ public class Publication {
 
     public void setReactionsCount(int reactionsCount) {
         this.reactionsCount = reactionsCount;
+    }
+
+    public boolean isAbonne() {
+        return isAbonne;
+    }
+
+    public void setAbonne(boolean abonne) {
+        isAbonne = abonne;
     }
 }

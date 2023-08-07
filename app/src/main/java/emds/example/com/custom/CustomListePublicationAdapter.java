@@ -46,12 +46,21 @@ public class CustomListePublicationAdapter extends RecyclerView.Adapter<CustomLi
             holder.publication_image.setImageResource(R.drawable.not_available);
         }
 
+        if(publications.get(position).isAbonne() != true) {
+            holder.lieu_is_abonne.setVisibility(View.GONE);
+        }
+        else {
+            holder.lieu_is_abonne.setVisibility(View.VISIBLE);
+        }
+
         holder.publication_lieu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 lieuListener.onLieuClicked(publications.get(position).getLieuDetails());
             }
         });
+
+
     }
 
     @Override

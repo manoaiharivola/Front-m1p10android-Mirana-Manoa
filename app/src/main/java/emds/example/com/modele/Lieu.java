@@ -12,6 +12,7 @@ public class Lieu implements Serializable {
     private String lieu_mail;
     private int abonnes;
     private float note_moyenne;
+    private boolean isAbonne;
 
     public String get_id() {
         return _id;
@@ -83,5 +84,13 @@ public class Lieu implements Serializable {
 
     public void setNote_moyenne(float note_moyenne) {
         this.note_moyenne = note_moyenne;
+    }
+
+    public boolean isAbonne() {
+        return isAbonne;
+    }
+
+    public void setAbonne(boolean abonne) {
+        isAbonne = abonne;
     }
 }
