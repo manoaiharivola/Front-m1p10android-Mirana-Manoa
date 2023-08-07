@@ -285,6 +285,58 @@ public class LieuFragment extends Fragment implements CustomSelectLieuListener, 
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         }
 
+        HashMap<String, String> map = new HashMap<>();
+        map.put("fk_lieu_id", lieu.get_id());
+        buttonAbonner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Call<APIResult> call = retrofitInterface.sAbonner("Bearer " + accessToken, map);
+                call.enqueue(new Callback<APIResult>() {
+                    @Override
+                    public void onResponse(Call<APIResult> call, Response<APIResult> response) {
+                        APIResult result = response.body();
+                        if(result.getStatus() == 201) {
+                            lieu.setAbonne(true);
+                            onLieuClicked(lieu);
+                            Toast.makeText(getContext(), "Vous êtes maintenant abonné à ce lieu", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(getContext(), "Erreur !", Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<APIResult> call, Throwable t) {
+                        Toast.makeText(getContext(), "Erreur serveur !", Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        });
+
+        buttonDesabonner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Call<APIResult> call = retrofitInterface.seDesabonner("Bearer " + accessToken, map);
+                call.enqueue(new Callback<APIResult>() {
+                    @Override
+                    public void onResponse(Call<APIResult> call, Response<APIResult> response) {
+                        APIResult result = response.body();
+                        if(result.getStatus() == 200) {
+                            lieu.setAbonne(false);
+                            onLieuClicked(lieu);
+                            Toast.makeText(getContext(), "Vous vous êtes désabonné de ce lieu!", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(getContext(), "Erreur !", Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<APIResult> call, Throwable t) {
+                        Toast.makeText(getContext(), "Erreur serveur !", Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        });
+
         refreshButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -294,6 +346,7 @@ public class LieuFragment extends Fragment implements CustomSelectLieuListener, 
 
         return view;
     }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

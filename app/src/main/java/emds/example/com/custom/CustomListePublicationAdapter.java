@@ -62,7 +62,7 @@ public class CustomListePublicationAdapter extends RecyclerView.Adapter<CustomLi
                 lieuListener.onLieuClicked(lieu);
             }
         });
-        
+
     }
 
     @Override
