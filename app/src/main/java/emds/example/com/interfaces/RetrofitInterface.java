@@ -28,4 +28,7 @@ public interface RetrofitInterface {
             @Header("Authorization") String bearerToken,
             @Query("lieu_nom") String lieu_nom
     );
+
+    @POST("/publications")
+    Call<APIResult> createPublication(@Header("Authorization") String bearerToken, @Body HashMap<String, String> map);
 }

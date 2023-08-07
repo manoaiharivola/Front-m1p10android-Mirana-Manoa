@@ -122,7 +122,7 @@ public class Inscription extends AppCompatActivity {
                                     }
                                 };
                                 if (result.getStatus() == 201) {
-                                    handler.postDelayed(runnable, 4000);
+                                    handler.postDelayed(runnable, 8000);
                                 } else {
                                     handler.postDelayed(runnable, 2000);
                                 }
